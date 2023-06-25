@@ -23,7 +23,7 @@ list.insertAdjacentHTML("beforeend", createMarkupitems(galleryItems));
 list.addEventListener('click', handlerClickImg);
 
 function handlerClickImg(evt) {
-   evt.preventDefault();
+    evt.preventDefault();
 
     if (!evt.target.classList.contains("gallery__image")) {
         return;
@@ -32,9 +32,18 @@ function handlerClickImg(evt) {
     const imgItem = evt.target;
     const obj = findImgItem(imgItem);
 
-    const instance = basicLightbox.create(createMarkupModal(obj));
+    const instance = basicLightbox.create(createMarkupModal(obj), document.addEventListener("keydown", handlerKeydownEsc));
     instance.show();
-    
+
+    function handlerKeydownEsc(evt) {
+        if (evt.key !== 'Escape') {
+            return
+        }
+         instance.close()
+         document.removeEventListener("keydown", handlerKeydownEsc)
+        
+    }
+   
 }
 
 function findImgItem(item) {
@@ -47,7 +56,7 @@ function findImgItem(item) {
 function createMarkupModal({preview, original, description} = {}) {
      return `<img
       src="${original}"
-      data-source="${preview}"
       alt="${description}"
       />` 
 }
+
